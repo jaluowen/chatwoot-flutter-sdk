@@ -43,7 +43,10 @@ class ChatwootChat extends StatefulWidget {
   final double? onEndReachedThreshold;
 
   /// See [Message.onMessageLongPress]
-  final void Function(types.Message)? onMessageLongPress;
+  final void Function(
+    BuildContext context,
+    types.Message,
+  )? onMessageLongPress;
 
   /// See [Message.onMessageTap]
   final void Function(types.Message)? onMessageTap;
@@ -333,7 +336,7 @@ class _ChatwootChatState extends State<ChatwootChat> {
     });
   }
 
-  void _handleMessageTap(types.Message message) async {
+  void _handleMessageTap(BuildContext context, types.Message message) async {
     if (message.status == types.Status.error && message is types.TextMessage) {
       _handleResendMessage(message);
     }
@@ -345,7 +348,8 @@ class _ChatwootChatState extends State<ChatwootChat> {
     types.PreviewData previewData,
   ) {
     final index = _messages.indexWhere((element) => element.id == message.id);
-    final updatedMessage = _messages[index].copyWith(previewData: previewData);
+    // final updatedMessage = _messages[index].copyWith(previewData: previewData);
+    final updatedMessage = _messages[index];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
@@ -418,7 +422,7 @@ class _ChatwootChatState extends State<ChatwootChat> {
                 onEndReached: widget.onEndReached,
                 onEndReachedThreshold: widget.onEndReachedThreshold,
                 onMessageLongPress: widget.onMessageLongPress,
-                onTextChanged: widget.onTextChanged,
+                // onTextChanged: widget.onTextChanged,
                 showUserAvatars: widget.showUserAvatars,
                 showUserNames: widget.showUserNames,
                 timeFormat: widget.timeFormat ?? DateFormat.Hm(),

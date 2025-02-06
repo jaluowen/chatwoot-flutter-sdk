@@ -46,8 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("Chatwoot Example"),
       ),
       body: ChatwootWidget(
-        websiteToken: "websiteToken",
-        baseUrl: "https://app.chatwoot.com",
+        websiteToken: "nEeZ3SbedQN582Xj6v1sTDaS",
+        baseUrl: "https://hotline.digitalservice.id",
         user: ChatwootUser(
           identifier: "test@test.com",
           name: "Tester test",
