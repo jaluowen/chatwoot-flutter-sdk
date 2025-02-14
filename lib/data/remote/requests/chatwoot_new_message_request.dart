@@ -7,13 +7,21 @@ part 'chatwoot_new_message_request.g.dart';
 class ChatwootNewMessageRequest extends Equatable {
   @JsonKey()
   final String content;
+
   @JsonKey(name: "echo_id")
   final String echoId;
 
-  ChatwootNewMessageRequest({required this.content, required this.echoId});
+  @JsonKey(ignore: true) // Don't include in JSON serialization
+  final List<String>? attachments; // List of file paths
+
+  ChatwootNewMessageRequest({
+    required this.content,
+    required this.echoId,
+    this.attachments,
+  });
 
   @override
-  List<Object> get props => [content, echoId];
+  List<Object?> get props => [content, echoId, attachments];
 
   factory ChatwootNewMessageRequest.fromJson(Map<String, dynamic> json) =>
       _$ChatwootNewMessageRequestFromJson(json);

@@ -11,6 +11,7 @@ ChatwootNewMessageRequest _$ChatwootNewMessageRequestFromJson(
     ChatwootNewMessageRequest(
       content: json['content'] as String,
       echoId: json['echo_id'] as String,
+      attachments: json['attachments'] as List<String>,
     );
 
 Map<String, dynamic> _$ChatwootNewMessageRequestToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$ChatwootNewMessageRequestToJson(
     <String, dynamic>{
       'content': instance.content,
       'echo_id': instance.echoId,
+      'attachments': instance.attachments,
     };

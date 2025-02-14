@@ -28,6 +28,8 @@ abstract class ChatwootClientService {
   Future<List<ChatwootConversation>> getConversations();
 
   Future<ChatwootMessage> createMessage(ChatwootNewMessageRequest request);
+  Future<ChatwootMessage> createMessageWithAttatchments(
+      ChatwootNewMessageRequest request);
 
   Future<ChatwootMessage> updateMessage(String messageIdentifier, update);
 
@@ -51,6 +53,34 @@ class ChatwootClientServiceImpl extends ChatwootClientService {
       final createResponse = await _dio.post(
           "/public/api/v1/inboxes/${ChatwootClientApiInterceptor.INTERCEPTOR_INBOX_IDENTIFIER_PLACEHOLDER}/contacts/${ChatwootClientApiInterceptor.INTERCEPTOR_CONTACT_IDENTIFIER_PLACEHOLDER}/conversations/${ChatwootClientApiInterceptor.INTERCEPTOR_CONVERSATION_IDENTIFIER_PLACEHOLDER}/messages",
           data: request.toJson());
+      if ((createResponse.statusCode ?? 0).isBetween(199, 300)) {
+        return ChatwootMessage.fromJson(createResponse.data);
+      } else {
+        throw ChatwootClientException(
+            createResponse.statusMessage ?? "unknown error",
+            ChatwootClientExceptionType.SEND_MESSAGE_FAILED);
+      }
+    } on DioException catch (e) {
+      throw ChatwootClientException(e.message ?? "Error",
+          ChatwootClientExceptionType.SEND_MESSAGE_FAILED);
+    }
+  }
+
+  //Sends message with attachments to chatwoot inbox
+  @override
+  Future<ChatwootMessage> createMessageWithAttatchments(
+      ChatwootNewMessageRequest request) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "content": request.content,
+        "echo_id": request.echoId,
+        "attachments[]": await Future.wait(request.attachments!
+            .map((file) async => await MultipartFile.fromFile(file))),
+      });
+      final createResponse = await _dio.post(
+          "/public/api/v1/inboxes/${ChatwootClientApiInterceptor.INTERCEPTOR_INBOX_IDENTIFIER_PLACEHOLDER}/contacts/${ChatwootClientApiInterceptor.INTERCEPTOR_CONTACT_IDENTIFIER_PLACEHOLDER}/conversations/${ChatwootClientApiInterceptor.INTERCEPTOR_CONVERSATION_IDENTIFIER_PLACEHOLDER}/messages",
+          data: formData,
+          options: Options(headers: {"Content-Type": "multipart/form-data"}));
       if ((createResponse.statusCode ?? 0).isBetween(199, 300)) {
         return ChatwootMessage.fromJson(createResponse.data);
       } else {

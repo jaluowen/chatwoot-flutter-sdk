@@ -38,6 +38,7 @@ abstract class ChatwootRepository {
   void listenForEvents();
 
   Future<void> sendMessage(ChatwootNewMessageRequest request);
+  Future<void> sendMessageWithAttacthment(ChatwootNewMessageRequest request);
 
   void sendAction(ChatwootActionType action);
 
@@ -115,6 +116,23 @@ class ChatwootRepositoryImpl extends ChatwootRepository {
   Future<void> sendMessage(ChatwootNewMessageRequest request) async {
     try {
       final createdMessage = await clientService.createMessage(request);
+      await localStorage.messagesDao.saveMessage(createdMessage);
+      callbacks.onMessageSent?.call(createdMessage, request.echoId);
+      if (clientService.connection != null && !_isListeningForEvents) {
+        listenForEvents();
+      }
+    } on ChatwootClientException catch (e) {
+      callbacks.onError?.call(
+          ChatwootClientException(e.cause, e.type, data: request.echoId));
+    }
+  }
+
+  ///Sends message with attatchment to chatwoot inbox
+  Future<void> sendMessageWithAttacthment(
+      ChatwootNewMessageRequest request) async {
+    try {
+      final createdMessage =
+          await clientService.createMessageWithAttatchments(request);
       await localStorage.messagesDao.saveMessage(createdMessage);
       callbacks.onMessageSent?.call(createdMessage, request.echoId);
       if (clientService.connection != null && !_isListeningForEvents) {
