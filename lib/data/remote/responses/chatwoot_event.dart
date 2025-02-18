@@ -115,6 +115,9 @@ class ChatwootEventMessageData {
   @JsonKey()
   final dynamic users;
 
+  @JsonKey(name: "attachments")
+  final List<dynamic>? attachments;
+
   ChatwootEventMessageData(
       {this.id,
       this.user,
@@ -135,6 +138,7 @@ class ChatwootEventMessageData {
       this.externalSourceIds,
       this.private,
       this.senderId,
+      this.attachments,
       this.users});
 
   factory ChatwootEventMessageData.fromJson(Map<String, dynamic> json) =>
