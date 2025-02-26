@@ -77,6 +77,10 @@ class ChatwootClient {
     _repository.sendAction(action);
   }
 
+  Future<List<ChatwootConversation>?> getConversations() async {
+    return _repository.getConversations();
+  }
+
   ///Disposes chatwoot client and cancels all stream subscriptions
   dispose() {
     final container = providerContainerMap[_parameters.clientInstanceKey]!;

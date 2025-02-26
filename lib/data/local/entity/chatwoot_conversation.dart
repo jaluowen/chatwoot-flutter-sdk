@@ -29,11 +29,16 @@ class ChatwootConversation extends Equatable {
   @HiveField(3)
   final ChatwootContact contact;
 
+  @JsonKey()
+  @HiveField(4)
+  final String status;
+
   ChatwootConversation(
       {required this.id,
       required this.inboxId,
       required this.messages,
-      required this.contact});
+      required this.contact,
+      required this.status});
 
   factory ChatwootConversation.fromJson(Map<String, dynamic> json) =>
       _$ChatwootConversationFromJson(json);
@@ -41,5 +46,5 @@ class ChatwootConversation extends Equatable {
   Map<String, dynamic> toJson() => _$ChatwootConversationToJson(this);
 
   @override
-  List<Object?> get props => [id, inboxId, messages, contact];
+  List<Object?> get props => [id, inboxId, messages, contact, status];
 }
