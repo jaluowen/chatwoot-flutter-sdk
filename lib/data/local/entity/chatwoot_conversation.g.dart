@@ -21,13 +21,14 @@ class ChatwootConversationAdapter extends TypeAdapter<ChatwootConversation> {
       inboxId: fields[1] as int,
       messages: (fields[2] as List).cast<ChatwootMessage>(),
       contact: fields[3] as ChatwootContact,
+      status: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatwootConversation obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ChatwootConversationAdapter extends TypeAdapter<ChatwootConversation> {
       ..writeByte(2)
       ..write(obj.messages)
       ..writeByte(3)
-      ..write(obj.contact);
+      ..write(obj.contact)
+      ..writeByte(4)
+      ..write(obj.status);
   }
 
   @override
@@ -56,14 +59,14 @@ class ChatwootConversationAdapter extends TypeAdapter<ChatwootConversation> {
 ChatwootConversation _$ChatwootConversationFromJson(
         Map<String, dynamic> json) =>
     ChatwootConversation(
-      id: json['id'] as int,
-      inboxId: json['inbox_id'] as int,
-      messages: (json['messages'] as List<dynamic>)
-          .map((e) => ChatwootMessage.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      contact:
-          ChatwootContact.fromJson(json['contact'] as Map<String, dynamic>),
-    );
+        id: json['id'] as int,
+        inboxId: json['inbox_id'] as int,
+        messages: (json['messages'] as List<dynamic>)
+            .map((e) => ChatwootMessage.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        contact:
+            ChatwootContact.fromJson(json['contact'] as Map<String, dynamic>),
+        status: json['status'] as String);
 
 Map<String, dynamic> _$ChatwootConversationToJson(
         ChatwootConversation instance) =>
@@ -72,4 +75,5 @@ Map<String, dynamic> _$ChatwootConversationToJson(
       'inbox_id': instance.inboxId,
       'messages': instance.messages.map((e) => e.toJson()).toList(),
       'contact': instance.contact.toJson(),
+      'status': instance.status,
     };
