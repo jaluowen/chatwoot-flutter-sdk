@@ -76,6 +76,8 @@ class ChatwootClientServiceImpl extends ChatwootClientService {
         "echo_id": request.echoId,
         "attachments[]": await Future.wait(request.attachments!
             .map((file) async => await MultipartFile.fromFile(file))),
+        if (request.contentAttributes != null)
+          "content_attributes": jsonEncode(request.contentAttributes),
       });
       final createResponse = await _dio.post(
           "/public/api/v1/inboxes/${ChatwootClientApiInterceptor.INTERCEPTOR_INBOX_IDENTIFIER_PLACEHOLDER}/contacts/${ChatwootClientApiInterceptor.INTERCEPTOR_CONTACT_IDENTIFIER_PLACEHOLDER}/conversations/${ChatwootClientApiInterceptor.INTERCEPTOR_CONVERSATION_IDENTIFIER_PLACEHOLDER}/messages",

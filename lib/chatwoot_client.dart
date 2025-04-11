@@ -56,17 +56,28 @@ class ChatwootClient {
   /// [ChatwootMessage] will be returned with the [echoId] on [ChatwootCallbacks.onMessageSent]. If
   /// message fails to send [ChatwootCallbacks.onError] will be triggered [echoId] as data.
   Future<void> sendMessage(
-      {required String content, required String echoId}) async {
-    final request = ChatwootNewMessageRequest(content: content, echoId: echoId);
+      {required String content,
+      required String echoId,
+      Map<String, dynamic>? contentAttributes}) async {
+    final request = ChatwootNewMessageRequest(
+      content: content,
+      echoId: echoId,
+      contentAttributes: contentAttributes,
+    );
     await _repository.sendMessage(request);
   }
 
   Future<void> sendMessageWithAttacthment(
       {required String content,
       required String echoId,
-      List<String>? attachments}) async {
+      List<String>? attachments,
+      Map<String, dynamic>? contentAttributes}) async {
     final request = ChatwootNewMessageRequest(
-        content: content, echoId: echoId, attachments: attachments);
+      content: content,
+      echoId: echoId,
+      attachments: attachments,
+      contentAttributes: contentAttributes,
+    );
     await _repository.sendMessageWithAttacthment(request);
   }
 

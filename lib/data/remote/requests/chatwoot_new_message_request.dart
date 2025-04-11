@@ -14,14 +14,18 @@ class ChatwootNewMessageRequest extends Equatable {
   @JsonKey(ignore: true) // Don't include in JSON serialization
   final List<String>? attachments; // List of file paths
 
+  @JsonKey(name: 'content_attributes')
+  final Map<String, dynamic>? contentAttributes;
+
   ChatwootNewMessageRequest({
     required this.content,
     required this.echoId,
     this.attachments,
+    this.contentAttributes,
   });
 
   @override
-  List<Object?> get props => [content, echoId, attachments];
+  List<Object?> get props => [content, echoId, attachments,contentAttributes];
 
   factory ChatwootNewMessageRequest.fromJson(Map<String, dynamic> json) =>
       _$ChatwootNewMessageRequestFromJson(json);
