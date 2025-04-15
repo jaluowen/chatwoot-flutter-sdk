@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chatwoot_sdk/data/local/entity/chatwoot_contact.dart';
 import 'package:chatwoot_sdk/data/local/entity/chatwoot_conversation.dart';
@@ -143,6 +144,7 @@ class ChatwootClientServiceImpl extends ChatwootClientService {
       final createResponse = await _dio.get(
           "/public/api/v1/inboxes/${ChatwootClientApiInterceptor.INTERCEPTOR_INBOX_IDENTIFIER_PLACEHOLDER}/contacts/${ChatwootClientApiInterceptor.INTERCEPTOR_CONTACT_IDENTIFIER_PLACEHOLDER}/conversations");
       if ((createResponse.statusCode ?? 0).isBetween(199, 300)) {
+        // log('Ini respon list conversation : ${createResponse.toString()}');
         return (createResponse.data as List<dynamic>)
             .map(((json) => ChatwootConversation.fromJson(json)))
             .toList();

@@ -4,6 +4,7 @@ import 'dart:core';
 
 import 'package:chatwoot_sdk/chatwoot_callbacks.dart';
 import 'package:chatwoot_sdk/chatwoot_client.dart';
+import 'package:chatwoot_sdk/data/local/entity/chatwoot_conversation.dart';
 import 'package:chatwoot_sdk/data/local/entity/chatwoot_user.dart';
 import 'package:chatwoot_sdk/data/local/local_storage.dart';
 import 'package:chatwoot_sdk/data/remote/chatwoot_client_exception.dart';
@@ -34,6 +35,7 @@ abstract class ChatwootRepository {
   void getPersistedMessages();
 
   Future<void> getMessages();
+  Future<List<ChatwootConversation>> getConversations();
 
   void listenForEvents();
 
@@ -70,6 +72,17 @@ class ChatwootRepositoryImpl extends ChatwootRepository {
       callbacks.onMessagesRetrieved?.call(messages);
     } on ChatwootClientException catch (e) {
       callbacks.onError?.call(e);
+    }
+  }
+
+  @override
+  Future<List<ChatwootConversation>> getConversations() async {
+    try {
+      final conversations = await clientService.getConversations();
+      return conversations;
+    } on ChatwootClientException catch (e) {
+      callbacks.onError?.call(e);
+      return [];
     }
   }
 

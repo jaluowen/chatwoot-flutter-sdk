@@ -81,6 +81,11 @@ class ChatwootClient {
     await _repository.sendMessageWithAttacthment(request);
   }
 
+  Future<List<Map<String, dynamic>>> getConversations() async {
+    final conversations = await _repository.getConversations();
+    return conversations.map((e) => e.toJson()).toList();
+  }
+
   ///Send chatwoot action performed by user.
   ///
   /// Example: User started typing
