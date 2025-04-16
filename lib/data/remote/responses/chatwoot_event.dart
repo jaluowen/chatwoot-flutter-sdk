@@ -171,8 +171,27 @@ class ChatwootEventMessageUser extends Equatable {
   @HiveField(3)
   final String? thumbnail;
 
-  ChatwootEventMessageUser(
-      {this.id, this.avatarUrl, this.name, this.thumbnail});
+  @JsonKey(name: "available_name")
+  @HiveField(4)
+  final String? availableName;
+
+  @JsonKey()
+  @HiveField(5)
+  final String? type;
+
+  @JsonKey(name: "availability_status")
+  @HiveField(6)
+  final String? availabilityStatus;
+
+  ChatwootEventMessageUser({
+    this.id,
+    this.avatarUrl,
+    this.name,
+    this.thumbnail,
+    this.availableName,
+    this.type,
+    this.availabilityStatus,
+  });
 
   factory ChatwootEventMessageUser.fromJson(Map<String, dynamic> json) =>
       _$ChatwootEventMessageUserFromJson(json);
@@ -180,7 +199,15 @@ class ChatwootEventMessageUser extends Equatable {
   Map<String, dynamic> toJson() => _$ChatwootEventMessageUserToJson(this);
 
   @override
-  List<Object?> get props => [id, avatarUrl, name, thumbnail];
+  List<Object?> get props => [
+        id,
+        avatarUrl,
+        name,
+        thumbnail,
+        availableName,
+        type,
+        availabilityStatus,
+      ];
 }
 
 enum ChatwootEventType { welcome, ping, confirm_subscription }

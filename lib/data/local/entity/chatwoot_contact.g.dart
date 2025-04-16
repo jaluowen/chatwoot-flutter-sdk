@@ -58,7 +58,7 @@ class ChatwootContactAdapter extends TypeAdapter<ChatwootContact> {
 
 ChatwootContact _$ChatwootContactFromJson(Map<String, dynamic> json) =>
     ChatwootContact(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       contactIdentifier: json['source_id'] as String?,
       pubsubToken: json['pubsub_token'] as String?,
       name: json['name'] as String,
