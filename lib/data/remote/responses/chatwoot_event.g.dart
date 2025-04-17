@@ -22,16 +22,13 @@ class ChatwootEventMessageUserAdapter
       avatarUrl: fields[0] as String?,
       name: fields[2] as String?,
       thumbnail: fields[3] as String?,
-      availableName: fields[4] as String?,
-      type: fields[5] as String?,
-      availabilityStatus: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatwootEventMessageUser obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.avatarUrl)
       ..writeByte(1)
@@ -39,13 +36,7 @@ class ChatwootEventMessageUserAdapter
       ..writeByte(2)
       ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.thumbnail)
-      ..writeByte(4)
-      ..write(obj.availableName)
-      ..writeByte(5)
-      ..write(obj.type)
-      ..writeByte(6)
-      ..write(obj.availabilityStatus);
+      ..write(obj.thumbnail);
   }
 
   @override
@@ -97,7 +88,7 @@ Map<String, dynamic> _$ChatwootEventMessageToJson(
 ChatwootEventMessageData _$ChatwootEventMessageDataFromJson(
         Map<String, dynamic> json) =>
     ChatwootEventMessageData(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as int?,
       user: json['user'] == null
           ? null
           : ChatwootEventMessageUser.fromJson(
@@ -108,21 +99,20 @@ ChatwootEventMessageData _$ChatwootEventMessageDataFromJson(
           ? null
           : ChatwootEventMessageUser.fromJson(
               json['sender'] as Map<String, dynamic>),
-      conversationId: (json['conversation_id'] as num?)?.toInt(),
+      conversationId: json['conversation_id'] as int?,
       createdAt: json['created_at'],
       contentAttributes: json['content_attributes'],
       contentType: json['content_type'] as String?,
-      messageType: (json['message_type'] as num?)?.toInt(),
+      messageType: json['message_type'] as int?,
       content: json['content'] as String?,
-      inboxId: (json['inbox_id'] as num?)?.toInt(),
+      inboxId: json['inbox_id'] as int?,
       sourceId: json['source_id'] as String?,
       updatedAt: json['updated_at'],
       status: json['status'] as String?,
-      accountId: (json['account_id'] as num?)?.toInt(),
+      accountId: json['account_id'] as int?,
       externalSourceIds: json['external_source_ids'],
       private: json['private'] as bool?,
-      senderId: (json['sender_id'] as num?)?.toInt(),
-      attachments: json['attachments'] as List<dynamic>?,
+      senderId: json['sender_id'] as int?,
       users: json['users'],
     );
 
@@ -149,19 +139,15 @@ Map<String, dynamic> _$ChatwootEventMessageDataToJson(
       'conversation': instance.conversation,
       'user': instance.user?.toJson(),
       'users': instance.users,
-      'attachments': instance.attachments,
     };
 
 ChatwootEventMessageUser _$ChatwootEventMessageUserFromJson(
         Map<String, dynamic> json) =>
     ChatwootEventMessageUser(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as int?,
       avatarUrl: json['avatar_url'] as String?,
       name: json['name'] as String?,
       thumbnail: json['thumbnail'] as String?,
-      availableName: json['available_name'] as String?,
-      type: json['type'] as String?,
-      availabilityStatus: json['availability_status'] as String?,
     );
 
 Map<String, dynamic> _$ChatwootEventMessageUserToJson(
@@ -171,7 +157,4 @@ Map<String, dynamic> _$ChatwootEventMessageUserToJson(
       'id': instance.id,
       'name': instance.name,
       'thumbnail': instance.thumbnail,
-      'available_name': instance.availableName,
-      'type': instance.type,
-      'availability_status': instance.availabilityStatus,
     };
