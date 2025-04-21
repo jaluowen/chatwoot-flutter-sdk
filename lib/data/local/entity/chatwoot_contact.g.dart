@@ -22,13 +22,14 @@ class ChatwootContactAdapter extends TypeAdapter<ChatwootContact> {
       pubsubToken: fields[2] as String?,
       name: fields[3] as String,
       email: fields[4] as String,
+      contactType: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatwootContact obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class ChatwootContactAdapter extends TypeAdapter<ChatwootContact> {
       ..writeByte(3)
       ..write(obj.name)
       ..writeByte(4)
-      ..write(obj.email);
+      ..write(obj.email)
+      ..writeByte(5)
+      ..write(obj.contactType);
   }
 
   @override
@@ -63,6 +66,7 @@ ChatwootContact _$ChatwootContactFromJson(Map<String, dynamic> json) =>
       pubsubToken: json['pubsub_token'] as String?,
       name: json['name'] as String,
       email: json['email'] as String,
+      contactType: json['contact_type'] as String?,
     );
 
 Map<String, dynamic> _$ChatwootContactToJson(ChatwootContact instance) =>
@@ -72,4 +76,5 @@ Map<String, dynamic> _$ChatwootContactToJson(ChatwootContact instance) =>
       'pubsub_token': instance.pubsubToken,
       'name': instance.name,
       'email': instance.email,
+      'contact_type': instance.contactType,
     };
