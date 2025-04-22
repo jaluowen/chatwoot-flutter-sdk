@@ -31,19 +31,19 @@ class ChatwootConversation extends Equatable {
 
   @JsonKey()
   @HiveField(4)
-  final String uuid;
+  final String? uuid;
 
   @JsonKey()
   @HiveField(5)
-  final String status;
+  final String? status;
 
   @JsonKey(name: "contact_last_seen_at")
   @HiveField(6)
-  final int contactLastSeenAt;
+  final int? contactLastSeenAt;
 
   @JsonKey(name: "agent_last_seen_at")
   @HiveField(7)
-  final int agentLastSeenAt;
+  final int? agentLastSeenAt;
 
   ChatwootConversation(
       {required this.id,

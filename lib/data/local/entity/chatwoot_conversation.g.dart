@@ -21,10 +21,10 @@ class ChatwootConversationAdapter extends TypeAdapter<ChatwootConversation> {
       inboxId: fields[1] as int,
       messages: (fields[2] as List).cast<ChatwootMessage>(),
       contact: fields[3] as ChatwootContact,
-      uuid: fields[4] as String,
-      status: fields[5] as String,
-      contactLastSeenAt: fields[6] as int,
-      agentLastSeenAt: fields[7] as int,
+      uuid: fields[4] as String?,
+      status: fields[5] as String?,
+      contactLastSeenAt: fields[6] as int?,
+      agentLastSeenAt: fields[7] as int?,
     );
   }
 
@@ -75,10 +75,10 @@ ChatwootConversation _$ChatwootConversationFromJson(
           .toList(),
       contact:
           ChatwootContact.fromJson(json['contact'] as Map<String, dynamic>),
-      uuid: json['uuid'] as String,
-      status: json['status'] as String,
-      contactLastSeenAt: json['contact_last_seen_at'] as int,
-      agentLastSeenAt: json['agent_last_seen_at'] as int,
+      uuid: json['uuid'] as String?,
+      status: json['status'] as String?,
+      contactLastSeenAt: json['contact_last_seen_at'] as int?,
+      agentLastSeenAt: json['agent_last_seen_at'] as int?,
     );
 
 Map<String, dynamic> _$ChatwootConversationToJson(
