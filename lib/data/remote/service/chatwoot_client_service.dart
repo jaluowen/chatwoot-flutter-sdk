@@ -28,6 +28,8 @@ abstract class ChatwootClientService {
 
   Future<List<ChatwootConversation>> getConversations();
 
+  Future<ChatwootConversation> createNewConversation(String contactIdentifier);
+
   Future<ChatwootMessage> createMessage(ChatwootNewMessageRequest request);
   Future<ChatwootMessage> createMessageWithAttatchments(
       ChatwootNewMessageRequest request);
@@ -45,6 +47,28 @@ abstract class ChatwootClientService {
 class ChatwootClientServiceImpl extends ChatwootClientService {
   ChatwootClientServiceImpl(String baseUrl, {required Dio dio})
       : super(baseUrl, dio);
+
+  @override
+  Future<ChatwootConversation> createNewConversation(
+      String contactIdentifier) async {
+    try {
+      final createResponse = await _dio.post(
+          "/public/api/v1/inboxes/${ChatwootClientApiInterceptor.INTERCEPTOR_INBOX_IDENTIFIER_PLACEHOLDER}/contacts/$contactIdentifier/conversations");
+      if ((createResponse.statusCode ?? 0).isBetween(199, 300)) {
+        //creating contact successful continue with request
+        final newConversation =
+            ChatwootConversation.fromJson(createResponse.data);
+        return newConversation;
+      } else {
+        throw ChatwootClientException(
+            createResponse.statusMessage ?? "unknown error",
+            ChatwootClientExceptionType.CREATE_CONVERSATION_FAILED);
+      }
+    } on DioException catch (e) {
+      throw ChatwootClientException(e.message ?? "Error",
+          ChatwootClientExceptionType.CREATE_CONVERSATION_FAILED);
+    }
+  }
 
   ///Sends message to chatwoot inbox
   @override

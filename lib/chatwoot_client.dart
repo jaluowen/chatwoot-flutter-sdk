@@ -86,6 +86,10 @@ class ChatwootClient {
     return conversations.map((e) => e.toJson()).toList();
   }
 
+  Future<void> createNewConversation() async {
+    await _repository.createNewConversation();
+  }
+
   ///Send chatwoot action performed by user.
   ///
   /// Example: User started typing

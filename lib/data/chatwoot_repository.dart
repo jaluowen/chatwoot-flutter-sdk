@@ -4,6 +4,7 @@ import 'dart:core';
 
 import 'package:chatwoot_sdk/chatwoot_callbacks.dart';
 import 'package:chatwoot_sdk/chatwoot_client.dart';
+import 'package:chatwoot_sdk/data/local/entity/chatwoot_contact.dart';
 import 'package:chatwoot_sdk/data/local/entity/chatwoot_conversation.dart';
 import 'package:chatwoot_sdk/data/local/entity/chatwoot_user.dart';
 import 'package:chatwoot_sdk/data/local/local_storage.dart';
@@ -35,6 +36,8 @@ abstract class ChatwootRepository {
   void getPersistedMessages();
 
   Future<void> getMessages();
+  Future<void> createNewConversation();
+
   Future<List<ChatwootConversation>> getConversations();
 
   void listenForEvents();
@@ -76,6 +79,15 @@ class ChatwootRepositoryImpl extends ChatwootRepository {
   }
 
   @override
+  Future<void> createNewConversation() async {
+    ChatwootContact? contact = localStorage.contactDao.getContact();
+
+    final conversation =
+        await clientService.createNewConversation(contact!.contactIdentifier!);
+    await localStorage.conversationDao.saveConversation(conversation);
+  }
+
+  @override
   Future<List<ChatwootConversation>> getConversations() async {
     try {
       final conversations = await clientService.getConversations();
@@ -104,20 +116,24 @@ class ChatwootRepositoryImpl extends ChatwootRepository {
         await localStorage.userDao.saveUser(user);
       }
 
+      ChatwootConversation? conversation =
+          localStorage.conversationDao.getConversation();
+
       //refresh contact
       final contact = await clientService.getContact();
       localStorage.contactDao.saveContact(contact);
-
-      //refresh conversation
-      final conversations = await clientService.getConversations();
-      final persistedConversation =
-          localStorage.conversationDao.getConversation()!;
-      final refreshedConversation = conversations.firstWhere(
-          (element) => element.id == persistedConversation.id,
-          orElse: () =>
-              persistedConversation //highly unlikely orElse will be called but still added it just in case
-          );
-      localStorage.conversationDao.saveConversation(refreshedConversation);
+      if (conversation != null) {
+        //refresh conversation
+        final conversations = await clientService.getConversations();
+        final persistedConversation =
+            localStorage.conversationDao.getConversation()!;
+        final refreshedConversation = conversations.firstWhere(
+            (element) => element.id == persistedConversation.id,
+            orElse: () =>
+                persistedConversation //highly unlikely orElse will be called but still added it just in case
+            );
+        localStorage.conversationDao.saveConversation(refreshedConversation);
+      }
     } on ChatwootClientException catch (e) {
       callbacks.onError?.call(e);
     }
