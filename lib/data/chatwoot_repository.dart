@@ -125,14 +125,21 @@ class ChatwootRepositoryImpl extends ChatwootRepository {
       if (conversation != null) {
         //refresh conversation
         final conversations = await clientService.getConversations();
-        final persistedConversation =
-            localStorage.conversationDao.getConversation()!;
-        final refreshedConversation = conversations.firstWhere(
-            (element) => element.id == persistedConversation.id,
-            orElse: () =>
-                persistedConversation //highly unlikely orElse will be called but still added it just in case
-            );
-        localStorage.conversationDao.saveConversation(refreshedConversation);
+
+        if (conversations.last.status == 'resolved') {
+          await localStorage.conversationDao.deleteConversation();
+          await localStorage.messagesDao.clear();
+          callbacks.onConversationResolved?.call();
+        } else {
+          final persistedConversation =
+              localStorage.conversationDao.getConversation()!;
+          final refreshedConversation = conversations.firstWhere(
+              (element) => element.id == persistedConversation.id,
+              orElse: () =>
+                  persistedConversation //highly unlikely orElse will be called but still added it just in case
+              );
+          localStorage.conversationDao.saveConversation(refreshedConversation);
+        }
       }
     } on ChatwootClientException catch (e) {
       callbacks.onError?.call(e);
