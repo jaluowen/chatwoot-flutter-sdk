@@ -210,8 +210,12 @@ class ChatwootRepositoryImpl extends ChatwootRepository {
         final message = chatwootEvent.message!.data!.getMessage();
         localStorage.messagesDao.saveMessage(message);
         if (message.isMine) {
-          callbacks.onMessageDelivered
-              ?.call(message, chatwootEvent.message!.data!.echoId!);
+          if (chatwootEvent.message!.data!.echoId != null) {
+            callbacks.onMessageDelivered
+                ?.call(message, chatwootEvent.message!.data!.echoId!);
+          } else {
+            callbacks.onMessageReceived?.call(message);
+          }
         } else {
           callbacks.onMessageReceived?.call(message);
         }
