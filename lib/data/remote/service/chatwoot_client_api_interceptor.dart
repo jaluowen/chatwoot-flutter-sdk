@@ -33,7 +33,9 @@ class ChatwootClientApiInterceptor extends Interceptor {
       ChatwootConversation? conversation =
           _localStorage.conversationDao.getConversation();
 
-      if (contact == null) {
+      if (contact == null &&
+          (contact?.contactIdentifier == null ||
+              contact?.contactIdentifier == '')) {
         // create new contact from user if no token found
         contact = await _authService.createNewContact(
             _inboxIdentifier, _localStorage.userDao.getUser());
@@ -53,15 +55,13 @@ class ChatwootClientApiInterceptor extends Interceptor {
           INTERCEPTOR_INBOX_IDENTIFIER_PLACEHOLDER, _inboxIdentifier);
       newOptions.path = newOptions.path.replaceAll(
           INTERCEPTOR_CONTACT_IDENTIFIER_PLACEHOLDER,
-          contact.contactIdentifier!);
+          contact!.contactIdentifier!);
       if (conversation != null) {
         await _localStorage.conversationDao.saveConversation(conversation);
         newOptions.path = newOptions.path.replaceAll(
             INTERCEPTOR_CONVERSATION_IDENTIFIER_PLACEHOLDER,
             "${conversation.id}");
       }
-      log(_inboxIdentifier.toString());
-      log(contact.contactIdentifier!.toString());
 
       handler.next(newOptions);
     });
