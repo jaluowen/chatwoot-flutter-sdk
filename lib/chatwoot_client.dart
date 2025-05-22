@@ -207,4 +207,20 @@ class ChatwootClient {
   static clearCookies() async {
     await StoreHelper.deleteCookie();
   }
+
+  ChatwootContact? getContact() {
+    final container = providerContainerMap[_parameters.clientInstanceKey]!;
+    final localStorage = container.read(localStorageProvider(_parameters));
+
+    ChatwootContact? contact = localStorage.contactDao.getContact();
+
+    return contact;
+  }
+
+  Future<void> setContact(ChatwootContact contact) async {
+    final container = providerContainerMap[_parameters.clientInstanceKey]!;
+    final localStorage = container.read(localStorageProvider(_parameters));
+
+    await localStorage.contactDao.saveContact(contact);
+  }
 }
